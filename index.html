@@ -6,147 +6,70 @@
     <title>NepalHub - Complete all-in-one shop management</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="aio.png">
-    <link rel="apple-touch-icon" href="aio2.png">
     <meta name="description" content="Complete all-in-one shop management by Kamal G.C.">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
-    <!-- Lucide Icons CDN -->
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <!-- Lucide Icons & Nepali Date -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Nepali Date Converter CDN -->
     <script src="https://cdn.jsdelivr.net/npm/nepali-date-converter@3.3.1/dist/nepali-date-converter.umd.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&family=Orbitron:wght@500&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start selection:bg-teal-500 selection:text-slate-900 font-sans-nepali transition-colors duration-300">
-
-    <!-- टोस्ट म्यासेज कन्टेनर -->
-    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-4">
-        <div id="toast-message" class="bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2 border border-emerald-400">
-            <span>✅</span> <span id="toast-text">सफल भयो!</span>
-        </div>
-    </div>
+<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start font-sans-nepali">
 
     <!-- स्प्ल्याश स्क्रिन -->
-    <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-teal-950 to-slate-950 text-white p-6 transition-opacity duration-500 ease-in-out">
-        <div class="w-full h-8"></div>
-        <div class="flex flex-col items-center text-center">
-            <div class="relative mb-5">
-                <div class="absolute -inset-2 rounded-3xl bg-cyan-500/30 blur-xl animate-pulse"></div>
-                <div class="relative w-28 h-28 rounded-3xl flex items-center justify-center bg-slate-900 border border-cyan-500/40 text-cyan-400 font-black text-2xl shadow-2xl overflow-hidden">
-                    <img src="aio.png" alt="Logo" class="w-full h-full object-cover">
-                </div>
-            </div>
-            <h1 class="text-2xl font-black tracking-tight text-white px-4">NepalHub</h1>
-            <p class="text-cyan-400 text-xs font-semibold tracking-wide mt-1">Complete all-in-one shop management</p>
+    <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950 text-white transition-opacity duration-500">
+        <div class="w-28 h-28 rounded-3xl bg-slate-900 border border-cyan-500/40 flex items-center justify-center shadow-2xl">
+            <img src="aio.png" alt="Logo" class="w-full h-full object-cover">
         </div>
-        <div class="text-center pb-2">
-            <p class="text-[11px] text-slate-400 font-medium">©️ 2026 <a href="https://kamalgc.com.np" target="_blank" class="text-cyan-400 font-bold hover:underline">kamalgc.com.np</a></p>
-            <p class="text-[10px] text-slate-500 mt-0.5">Support: support@kamalgc.com.np</p>
-        </div>
+        <h1 class="text-2xl font-black mt-4">NepalHub</h1>
     </div>
 
-    <!-- AUTH CONTAINER -->
-    <div id="auth-container" class="w-full max-w-md min-h-screen flex items-center justify-center p-4 bg-inherit hidden">
-        <div class="bg-white border border-slate-200 dark:bg-[#0d1322] dark:border-slate-800 p-6 rounded-3xl shadow-2xl w-full">
-            <div id="signup-box" class="form-box space-y-4">
-                <div class="text-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-800 dark:text-white">नयाँ खाता बनाउनुहोस्</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">NepalHub - Complete shop management</p>
-                </div>
-                <form id="signup-form" class="space-y-3">
-                    <input type="text" id="signup-name" placeholder="पूरा नाम (Full Name)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="email" id="signup-email" placeholder="इमेल (Email)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="password" id="signup-password" placeholder="पासवर्ड (Password)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold p-3 rounded-xl text-xs transition">रजिस्टर्ड गर्नुहोस्</button>
-                </form>
-                <div class="text-center text-xs text-slate-500 dark:text-slate-400 mt-3">
-                    पहिले नै खाता छ? <a onclick="showForm('login')" class="text-cyan-600 dark:text-cyan-400 cursor-pointer font-semibold underline">लगइन गर्नुहोस्</a>
-                </div>
-            </div>
-
-            <div id="login-box" class="form-box hidden space-y-4">
-                <div class="text-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-800 dark:text-white">लगइन गर्नुहोस्</h2>
-                </div>
-                <form id="login-form" class="space-y-3">
-                    <input type="email" id="login-email" placeholder="इमेल (Email)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="password" id="login-password" placeholder="पासवर्ड (Password)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold p-3 rounded-xl text-xs transition">लगइन</button>
-                </form>
-            </div>
-            <div id="auth-message" class="text-center text-xs mt-3 font-medium"></div>
-        </div>
-    </div>
-
-    <!-- मुख्य ड्यासबोर्ड क्यानभास -->
-    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800/60 shadow-2xl flex flex-col relative pb-24 hidden transition-colors duration-300">
+    <!-- मुख्य ड्यासबोर्ड कन्टेनर (यहाँ HIDDEN छैन) -->
+    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white dark:bg-[#0d1322] flex flex-col relative pb-24">
         
-        <!-- शीर्ष स्थिति पट्टी -->
-        <div class="px-3 py-2 bg-slate-100 dark:bg-[#080c14] border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-medium text-slate-600 dark:text-slate-300">
-            <div class="flex items-center gap-2">
-                <span id="live-time" class="text-emerald-600 dark:text-emerald-400 font-semibold">🕒 लोड हुँदै...</span>
-                <span id="live-nepali-date" class="text-slate-700 dark:text-slate-300">📅 लोड हुँदै...</span>
-            </div>
-            <div id="geo-weather" class="flex items-center gap-1 text-amber-600 dark:text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20 text-[10px]">
-                --°C
-            </div>
-        </div>
-
-        <!-- मुख्य हेडर -->
-        <header class="p-3 bg-white/90 dark:bg-[#0d1322]/90 border-b border-slate-200 dark:border-slate-800/60 flex items-center justify-between sticky top-0 z-30 backdrop-blur-md">
+        <header class="p-3 bg-white/90 dark:bg-[#0d1322]/90 border-b border-slate-800/60 flex items-center justify-between sticky top-0 z-30 backdrop-blur-md">
             <div class="flex items-center gap-2.5">
-                <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200">
+                <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
                 <div>
-                    <h1 id="header-shop-name" class="text-slate-900 dark:text-white font-bold text-base leading-tight">NepalHub</h1>
-                    <p id="header-owner-name" class="text-cyan-600 dark:text-cyan-400/80 text-[11px] italic font-medium">साहुजी: Kamal G.C.</p>
+                    <h1 id="header-shop-name" class="text-white font-bold text-base">NepalHub</h1>
+                    <p id="header-owner-name" class="text-cyan-400 text-[11px]">साहुजी: Kamal G.C.</p>
                 </div>
             </div>
-            <button onclick="toggleTheme()" id="theme-toggle-btn" class="p-1.5 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-amber-400 rounded-lg border border-slate-200 dark:border-slate-700">
+            <button onclick="toggleTheme()" class="p-1.5 bg-slate-800 text-amber-400 rounded-lg border border-slate-700">
                 <i data-lucide="sun" class="w-4 h-4"></i>
             </button>
         </header>
 
-        <!-- मुख्य सामग्री कन्टेनर -->
         <main id="app-container" class="p-3.5 space-y-4 flex-1 overflow-y-auto">
-            <!-- Dynamic pages load here -->
+            <!-- यहाँ ग्रिड लेआउट लोड हुन्छ -->
         </main>
 
         <!-- तलको नेभिगेसन बार -->
-        <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 dark:bg-[#080c14]/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-md px-2 py-2 z-40">
+        <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-[#080c14]/95 border-t border-slate-800 backdrop-blur-md px-2 py-2 z-40">
             <div class="grid grid-cols-5 items-center text-center">
-                <button onclick="switchPage('home')" id="nav-home" class="flex flex-col items-center justify-center gap-1 text-cyan-600 dark:text-cyan-400 font-bold">
+                <button onclick="switchPage('home')" id="nav-home" class="flex flex-col items-center gap-1 text-cyan-400 font-bold">
                     <i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px]">होम</span>
                 </button>
-                <button onclick="switchPage('inventory')" id="nav-inventory" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+                <button onclick="switchPage('inventory')" id="nav-inventory" class="flex flex-col items-center gap-1 text-slate-400">
                     <i data-lucide="package" class="w-5 h-5"></i><span class="text-[10px]">स्टक</span>
                 </button>
-                <div class="relative flex justify-center items-center">
-                    <button onclick="toggleCalculator(true)" class="absolute -top-7 w-14 h-14 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg transition transform active:scale-95 border-4 border-white dark:border-[#0d1322]">
-                        <i data-lucide="calculator" class="w-6 h-6"></i>
-                    </button>
-                </div>
-                <button onclick="switchPage('udharo')" id="nav-udharo" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+                <button onclick="toggleCalculator(true)" class="-mt-8 w-14 h-14 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg border-4 border-[#0d1322]">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                </button>
+                <button onclick="switchPage('udharo')" id="nav-udharo" class="flex flex-col items-center gap-1 text-slate-400">
                     <i data-lucide="users" class="w-5 h-5"></i><span class="text-[10px]">उधारो</span>
                 </button>
-                <button onclick="switchPage('pos')" id="nav-pos" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+                <button onclick="switchPage('pos')" id="nav-pos" class="flex flex-col items-center gap-1 text-slate-400">
                     <i data-lucide="shopping-cart" class="w-5 h-5"></i><span class="text-[10px]">POS</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- कन्टेनरहरू -->
-    <div id="sidebar-container"></div>
-    <div id="calculator-container"></div>
-    <div id="lowStock-container"></div>
-
-    <!-- स्क्रिप्टहरू लोड गर्ने -->
+    <!-- कम्पोनेन्ट फाइलहरू -->
     <script src="components/sidebar.js"></script>
     <script src="components/pos.js"></script>
     <script src="components/inventory.js"></script>
@@ -159,9 +82,8 @@
     <script src="components/lowStock.js"></script>
     <script src="main.js"></script>
 
-    <!-- Service Worker दर्ता र स्ल्यास स्क्रिन कन्ट्रोल -->
     <script>
-        // स्प्ल्याश स्क्रिन स्वचालित रूपमा हटाउने कोड (यदि main.js मा छुटेको भए)
+        // स्प्ल्याश स्क्रिन हटाउने र एप सुरु गर्ने
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -169,27 +91,11 @@
                     splash.style.opacity = '0';
                     setTimeout(() => splash.style.display = 'none', 500);
                 }
-                // लुकेको ड्यासबोर्ड वा अथराइजेसन देखाउने
-                const dashboard = document.getElementById('dashboard-container');
-                const auth = document.getElementById('auth-container');
-                if (dashboard && auth) {
-                    // तपाईंको नियम अनुसार ड्यासबोर्ड वा लगइन देखाउने (फिलहाल ड्यासबोर्ड खुला राख्न)
-                    dashboard.classList.remove('hidden');
-                }
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
+                // लुकेको ड्यासबोर्ड सिधै देखाउने
+                document.getElementById('dashboard-container').classList.remove('hidden');
+                lucide.createIcons();
             }, 1000);
         });
-
-        // Service Worker (GitHub Pages वा Custom Domain को लागि सही path)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registered!'))
-                    .catch(err => console.log('Service Worker registration failed:', err));
-            });
-        }
     </script>
 </body>
 </html>
