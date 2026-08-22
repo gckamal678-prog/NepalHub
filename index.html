@@ -159,11 +159,33 @@
     <script src="components/lowStock.js"></script>
     <script src="main.js"></script>
 
-    <!-- Service Worker दर्ता (PWA Support) -->
+    <!-- Service Worker दर्ता र स्ल्यास स्क्रिन कन्ट्रोल -->
     <script>
+        // स्प्ल्याश स्क्रिन स्वचालित रूपमा हटाउने कोड (यदि main.js मा छुटेको भए)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.style.display = 'none', 500);
+                }
+                // लुकेको ड्यासबोर्ड वा अथराइजेसन देखाउने
+                const dashboard = document.getElementById('dashboard-container');
+                const auth = document.getElementById('auth-container');
+                if (dashboard && auth) {
+                    // तपाईंको नियम अनुसार ड्यासबोर्ड वा लगइन देखाउने (फिलहाल ड्यासबोर्ड खुला राख्न)
+                    dashboard.classList.remove('hidden');
+                }
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }, 1000);
+        });
+
+        // Service Worker (GitHub Pages वा Custom Domain को लागि सही path)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then(reg => console.log('Service Worker registered!'))
                     .catch(err => console.log('Service Worker registration failed:', err));
             });
