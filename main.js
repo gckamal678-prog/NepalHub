@@ -103,17 +103,17 @@ function checkLoginState() {
     const authContainer = document.getElementById('auth-container');
     const dashContainer = document.getElementById('dashboard-container');
 
-    // यदि लगइन गरिएको छैन भने पहिलो पटक लगइन स्क्रिन देखाउने वा सिधै ड्यासबोर्डमा पठाउने सजिलो व्यवस्था
-    if (loggedUser) {
-        if(authContainer) authContainer.classList.add('hidden');
-        if(dashContainer) dashContainer.classList.remove('hidden');
-        storeData.ownerName = loggedUser;
-        updateStoreInfoUI();
-    } else {
-        // यदि टेस्ट गर्न सजिलो बनाउने हो भने लगइन नभए पनि ड्यासबोर्ड खुला राख्न सकिन्छ
-        if(authContainer) authContainer.classList.remove('hidden');
-        if(dashContainer) dashContainer.classList.add('hidden');
+    // यदि लगइन गरिएको छैन भने 'Kamal' लाई डिफाल्ट मान्ने (टेस्टिङका लागि सजिलो)
+    if (!loggedUser) {
+        localStorage.setItem('logged_user', 'Kamal');
     }
+    
+    // अब ड्यासबोर्ड देखाउने
+    if(authContainer) authContainer.classList.add('hidden');
+    if(dashContainer) dashContainer.classList.remove('hidden');
+    
+    storeData.ownerName = localStorage.getItem('logged_user') || 'Kamal';
+    updateStoreInfoUI();
 }
 
 function showForm(formType) {
