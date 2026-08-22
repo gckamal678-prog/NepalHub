@@ -3,99 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NepalHub - Complete shop management</title>
-
+    <title>NepalHub - Complete all-in-one shop management</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="aio.png">
     <link rel="apple-touch-icon" href="aio2.png">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class' }</script>
+    <meta name="description" content="Complete all-in-one shop management">
     
-    <!-- Icons & Utilities -->
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Nepali Date Converter CDN -->
     <script src="https://cdn.jsdelivr.net/npm/nepali-date-converter@3.3.1/dist/nepali-date-converter.umd.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts & Custom CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&family=Orbitron:wght@500&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start font-sans">
+<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start selection:bg-teal-500 selection:text-slate-900 font-sans-nepali transition-colors duration-300">
 
-    <!-- टोस्ट म्यासेज -->
+    <!-- Toast Container -->
     <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-4">
-        <div id="toast-message" class="bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2">
+        <div id="toast-message" class="bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2 border border-emerald-400">
             <span>✅</span> <span id="toast-text">सफल भयो!</span>
         </div>
     </div>
 
-    <!-- स्प्ल्याश स्क्रिन -->
+    <!-- Splash Screen -->
     <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-teal-950 to-slate-950 text-white p-6 transition-opacity duration-500 ease-in-out">
         <div class="w-full h-8"></div>
         <div class="flex flex-col items-center text-center">
             <div class="relative mb-5">
-                <div class="relative w-24 h-24 rounded-3xl flex items-center justify-center bg-slate-900 border border-cyan-500/40 text-cyan-400 font-black text-2xl shadow-2xl">
+                <div class="absolute -inset-2 rounded-3xl bg-cyan-500/30 blur-xl animate-pulse"></div>
+                <div class="relative w-28 h-28 rounded-3xl flex items-center justify-center bg-slate-900 border border-cyan-500/40 text-cyan-400 font-black text-2xl shadow-2xl">
                     NH
                 </div>
             </div>
-            <h1 class="text-2xl font-black text-white">NepalHub</h1>
-            <p class="text-cyan-400 text-xs font-semibold mt-1">Complete all-in-one shop management</p>
+            <h1 class="text-2xl font-black tracking-tight text-white px-4">NepalHub</h1>
+            <p class="text-cyan-400 text-xs font-semibold tracking-wide mt-1">Complete all-in-one shop management</p>
+            <div class="mt-8 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 0ms"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-300 animate-bounce" style="animation-delay: 150ms"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-bounce" style="animation-delay: 300ms"></span>
+            </div>
         </div>
         <div class="text-center pb-2">
-            <p class="text-[11px] text-slate-400">© 2026 <span class="text-cyan-400 font-bold">kamalgc.com.np</span></p>
+            <p class="text-[11px] text-slate-400 font-medium">Powered by <span class="text-cyan-400 font-bold">NepalHub System</span></p>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD CONTAINER -->
-    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800 shadow-2xl flex flex-col relative pb-24">
+    <!-- Dashboard Container -->
+    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800/60 shadow-2xl flex flex-col relative pb-24 transition-colors duration-300">
         
-        <!-- Header -->
-        <header class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-inherit z-30">
+        <!-- Top Status Bar -->
+        <div class="px-3 py-2 bg-slate-100 dark:bg-[#080c14] border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-medium text-slate-600 dark:text-slate-300">
             <div class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center font-bold text-cyan-400">NH</div>
+                <span id="live-time" class="text-emerald-600 dark:text-emerald-400 font-semibold">🕒 लोड हुँदै...</span>
+                <span class="text-slate-300 dark:text-slate-600">|</span>
+                <span id="live-nepali-date" class="text-slate-700 dark:text-slate-300">📅 लोड हुँदै...</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[10px]">
+                <span id="geo-location" class="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                    <i data-lucide="map-pin" class="w-3 h-3 text-cyan-600"></i> नेपाल
+                </span>
+                <span id="geo-weather" class="flex items-center gap-1 text-amber-600 dark:text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                    <i data-lucide="thermometer" class="w-3 h-3"></i> --°C
+                </span>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="p-3 bg-white/90 dark:bg-[#0d1322]/90 border-b border-slate-200 dark:border-slate-800/60 flex items-center justify-between sticky top-0 z-30 backdrop-blur-md">
+            <div class="flex items-center gap-2.5">
+                <button onclick="switchPage('settings')" class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-900/40 border border-cyan-300 dark:border-cyan-500/30 flex items-center justify-center font-bold text-cyan-600 dark:text-cyan-400 text-lg shadow-inner">
+                    <span id="header-logo-text">N</span>
+                </button>
                 <div>
-                    <h1 id="header-shop-name" class="font-bold text-sm">NepalHub</h1>
-                    <p id="header-owner-name" class="text-cyan-400 text-[10px]">Shop Manager</p>
+                    <h1 id="header-shop-name" class="text-slate-900 dark:text-white font-bold text-base leading-tight">NepalHub</h1>
+                    <p id="header-owner-name" class="text-cyan-600 dark:text-cyan-400/80 text-[11px] italic font-medium">साहुजी: Kamal</p>
                 </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button onclick="toggleTheme()" id="theme-toggle-btn" class="p-1.5 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-amber-400 rounded-lg border border-slate-200 dark:border-slate-700 transition">
+                    <i data-lucide="sun" class="w-4 h-4"></i>
+                </button>
             </div>
         </header>
 
-        <!-- Main Dynamic App Container -->
+        <!-- Main App Container -->
         <main id="app-container" class="p-3.5 space-y-4 flex-1 overflow-y-auto">
-            <!-- Dynamic Components UI -->
+            <!-- Dynamic pages load here -->
         </main>
 
-        <!-- Bottom Navigation -->
-        <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white dark:bg-[#080c14] border-t border-slate-200 dark:border-slate-800 p-2 z-40">
-            <div class="grid grid-cols-4 items-center text-center">
-                <button onclick="switchPage('home')" id="nav-home" class="text-cyan-400 font-bold text-xs flex flex-col items-center justify-center gap-1">
-                    <span>होम</span>
+        <!-- Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 dark:bg-[#080c14]/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-md px-2 py-2 z-40">
+            <div class="grid grid-cols-5 items-center text-center">
+                <button onclick="switchPage('home')" id="nav-home" class="flex flex-col items-center justify-center gap-1 text-cyan-600 dark:text-cyan-400 font-bold">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                    <span class="text-[10px]">होम</span>
                 </button>
-                <button onclick="switchPage('inventory')" id="nav-inventory" class="text-slate-400 text-xs flex flex-col items-center justify-center gap-1">
-                    <span>स्टक</span>
+                <button onclick="switchPage('inventory')" id="nav-inventory" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+                    <i data-lucide="package" class="w-5 h-5"></i>
+                    <span class="text-[10px]">स्टक</span>
                 </button>
-                <button onclick="switchPage('udharo')" id="nav-udharo" class="text-slate-400 text-xs flex flex-col items-center justify-center gap-1">
-                    <span>उधारो</span>
+                <div class="relative flex justify-center items-center">
+                    <button onclick="makeCall()" class="absolute -top-7 w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/40 transition transform active:scale-95 border-4 border-white dark:border-[#0d1322]">
+                        <i data-lucide="phone" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <button onclick="switchPage('udharo')" id="nav-udharo" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                    <span class="text-[10px]">उधारो</span>
                 </button>
-                <button onclick="switchPage('pos')" id="nav-pos" class="text-slate-400 text-xs flex flex-col items-center justify-center gap-1">
-                    <span>POS</span>
+                <button onclick="switchPage('pos')" id="nav-pos" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span class="text-[10px]">कार्ट</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Component Scripts -->
-    <script src="components/calculator.js"></script>
-    <script src="components/finance.js"></script>
-    <script src="components/inventory.js"></script>
-    <script src="components/lowStock.js"></script>
-    <script src="components/pos.js"></script>
-    <script src="components/settings.js"></script>
-    <script src="components/sidebar.js"></script>
-    <script src="components/taxAudit.js"></script>
-    <script src="components/udharo.js"></script>
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="fixed inset-0 z-50 flex justify-end bg-slate-900/50 dark:bg-slate-950/70 backdrop-blur-sm hidden">
+        <div class="bg-white border-l border-slate-200 dark:bg-[#0d1322] dark:border-slate-800 w-full max-w-sm h-full flex flex-col shadow-2xl">
+            <div class="flex items-center justify-between px-4 py-3.5 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="bell" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
+                    <div>
+                        <h3 class="text-slate-900 dark:text-white font-bold text-xs">सूचना तथा अलर्ट</h3>
+                    </div>
+                </div>
+                <button onclick="toggleNotifications()" class="text-slate-500 hover:text-slate-800 dark:text-slate-400 p-1">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div id="notification-list" class="flex-1 p-3 space-y-2.5 overflow-y-auto"></div>
+        </div>
+    </div>
 
-    <!-- Main JS -->
+    <!-- Calculator Modal -->
+    <div id="calculator-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-sm p-4 pb-8 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-3.5">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                        <i data-lucide="calculator" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-slate-900 dark:text-white font-bold text-sm">क्याल्कुलेटर</h3>
+                </div>
+                <button onclick="toggleCalculator(false)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-xl bg-slate-100 dark:bg-slate-950/60">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 mb-4 text-right shadow-inner min-h-[80px] flex flex-col justify-end">
+                <div id="calc-prev" class="text-slate-400 dark:text-slate-500 text-xs font-mono tracking-wide mb-1"></div>
+                <div id="calc-display" class="text-slate-900 dark:text-white font-mono font-bold text-3xl tracking-wider">0</div>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+                <button class="h-12 rounded-2xl font-bold text-lg bg-rose-500/20 text-rose-600 border border-rose-500/30" onclick="calcClear()">AC</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" onclick="calcSign()">+/-</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-200 dark:bg-slate-800 text-cyan-600" onclick="calcOp('%')">%</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('÷')">÷</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('7')">7</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('8')">8</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('9')">9</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('×')">×</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('4')">4</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('5')">5</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('6')">6</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('-')">-</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('1')">1</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('2')">2</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('3')">3</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('+')">+</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('0')">0</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('.')">.</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center" onclick="calcBack()">⌫</button>
+                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-600 text-white font-extrabold" onclick="calcEquals()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modular Script Imports -->
+    <script src="calculator.js"></script>
+    <script src="finance.js"></script>
+    <script src="inventory.js"></script>
+    <script src="lowStock.js"></script>
+    <script src="pos.js"></script>
+    <script src="settings.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="taxAudit.js"></script>
+    <script src="udharo.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
