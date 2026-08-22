@@ -9,15 +9,18 @@
     <link rel="icon" type="image/png" sizes="192x192" href="aio.png">
     <link rel="apple-touch-icon" href="aio2.png">
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
+    
+    <!-- Icons & Utilities -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/nepali-date-converter@3.3.1/dist/nepali-date-converter.umd.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start font-sans-nepali">
+<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start font-sans">
 
     <!-- टोस्ट म्यासेज -->
     <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-4">
@@ -26,8 +29,8 @@
         </div>
     </div>
 
-    <!-- स्प्ल्याश स्क्रिन (Fix: transition र pointer-events थपिएको) -->
-    <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-teal-950 to-slate-950 text-white p-6 transition-opacity duration-700 ease-in-out">
+    <!-- स्प्ल्याश स्क्रिन -->
+    <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-teal-950 to-slate-950 text-white p-6 transition-opacity duration-500 ease-in-out">
         <div class="w-full h-8"></div>
         <div class="flex flex-col items-center text-center">
             <div class="relative mb-5">
@@ -39,67 +42,44 @@
             <p class="text-cyan-400 text-xs font-semibold mt-1">Complete all-in-one shop management</p>
         </div>
         <div class="text-center pb-2">
-            <p class="text-[11px] text-slate-400">Powered by <span class="text-cyan-400 font-bold">kamalgc.com.np</span></p>
+            <p class="text-[11px] text-slate-400">© 2026 <span class="text-cyan-400 font-bold">kamalgc.com.np</span></p>
         </div>
     </div>
 
-    <!-- AUTH CONTAINER -->
-    <div id="auth-container" class="w-full max-w-md min-h-screen flex items-center justify-center p-4 bg-inherit hidden">
-        <div class="bg-white border border-slate-200 dark:bg-[#0d1322] dark:border-slate-800 p-6 rounded-3xl shadow-2xl w-full">
-            <div id="signup-box" class="form-box space-y-4">
-                <div class="text-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-800 dark:text-white">नयाँ खाता बनाउनुहोस्</h2>
-                </div>
-                <form id="signup-form" class="space-y-3">
-                    <input type="text" id="signup-name" placeholder="पूरा नाम" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
-                    <input type="email" id="signup-email" placeholder="इमेल" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
-                    <input type="password" id="signup-password" placeholder="पासवर्ड" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
-                    <button type="submit" class="w-full bg-cyan-600 text-white font-bold p-3 rounded-xl text-xs">रजिस्टर्ड गर्नुहोस्</button>
-                </form>
-                <div class="text-center text-xs text-slate-500 mt-3">
-                    पहिले नै खाता छ? <a onclick="showForm('login')" class="text-cyan-600 font-semibold underline cursor-pointer">लगइन गर्नुहोस्</a>
-                </div>
-            </div>
-
-            <div id="login-box" class="form-box hidden space-y-4">
-                <div class="text-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-800 dark:text-white">लगइन गर्नुहोस्</h2>
-                </div>
-                <form id="login-form" class="space-y-3">
-                    <input type="email" id="login-email" placeholder="इमेल" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
-                    <input type="password" id="login-password" placeholder="पासवर्ड" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
-                    <button type="submit" class="w-full bg-cyan-600 text-white font-bold p-3 rounded-xl text-xs">लगइन</button>
-                </form>
-                <div class="text-center text-xs text-slate-500 mt-3">
-                    खाता छैन? <a onclick="showForm('signup')" class="text-cyan-600 font-semibold underline cursor-pointer">नयाँ बनाउनुहोस्</a>
-                </div>
-            </div>
-            <div id="auth-message" class="text-center text-xs mt-3 font-medium"></div>
-        </div>
-    </div>
-
-    <!-- MAIN DASHBOARD -->
-    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800 shadow-2xl flex flex-col relative pb-24 hidden">
+    <!-- MAIN DASHBOARD CONTAINER -->
+    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800 shadow-2xl flex flex-col relative pb-24">
+        
+        <!-- Header -->
         <header class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-inherit z-30">
             <div class="flex items-center gap-2">
                 <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center font-bold text-cyan-400">NH</div>
                 <div>
                     <h1 id="header-shop-name" class="font-bold text-sm">NepalHub</h1>
-                    <p id="header-owner-name" class="text-cyan-400 text-[10px]">साहुजी: Kamal</p>
+                    <p id="header-owner-name" class="text-cyan-400 text-[10px]">Shop Manager</p>
                 </div>
             </div>
         </header>
 
+        <!-- Main Dynamic App Container -->
         <main id="app-container" class="p-3.5 space-y-4 flex-1 overflow-y-auto">
-            <!-- Dynamic UI -->
+            <!-- Dynamic Components UI -->
         </main>
 
+        <!-- Bottom Navigation -->
         <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white dark:bg-[#080c14] border-t border-slate-200 dark:border-slate-800 p-2 z-40">
             <div class="grid grid-cols-4 items-center text-center">
-                <button onclick="switchPage('home')" id="nav-home" class="text-cyan-400 font-bold text-xs">होम</button>
-                <button onclick="switchPage('inventory')" id="nav-inventory" class="text-slate-400 text-xs">स्टक</button>
-                <button onclick="switchPage('udharo')" id="nav-udharo" class="text-slate-400 text-xs">उधारो</button>
-                <button onclick="switchPage('pos')" id="nav-pos" class="text-slate-400 text-xs">POS</button>
+                <button onclick="switchPage('home')" id="nav-home" class="text-cyan-400 font-bold text-xs flex flex-col items-center justify-center gap-1">
+                    <span>होम</span>
+                </button>
+                <button onclick="switchPage('inventory')" id="nav-inventory" class="text-slate-400 text-xs flex flex-col items-center justify-center gap-1">
+                    <span>स्टक</span>
+                </button>
+                <button onclick="switchPage('udharo')" id="nav-udharo" class="text-slate-400 text-xs flex flex-col items-center justify-center gap-1">
+                    <span>उधारो</span>
+                </button>
+                <button onclick="switchPage('pos')" id="nav-pos" class="text-slate-400 text-xs flex flex-col items-center justify-center gap-1">
+                    <span>POS</span>
+                </button>
             </div>
         </div>
     </div>
@@ -114,6 +94,8 @@
     <script src="components/sidebar.js"></script>
     <script src="components/taxAudit.js"></script>
     <script src="components/udharo.js"></script>
+
+    <!-- Main JS -->
     <script src="main.js"></script>
 </body>
 </html>
