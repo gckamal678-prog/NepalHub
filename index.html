@@ -3,241 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NepalHub - Complete all-in-one shop management</title>
+    <title>NepalHub - Complete shop management</title>
 
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="aio.png">
     <link rel="apple-touch-icon" href="aio2.png">
-    <meta name="description" content="Complete all-in-one shop management">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/nepali-date-converter@3.3.1/dist/nepali-date-converter.umd.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&family=Orbitron:wght@500&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start selection:bg-teal-500 selection:text-slate-900 font-sans-nepali transition-colors duration-300">
+<body class="bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 min-h-screen flex flex-col items-center justify-start font-sans-nepali">
 
-    <!-- १. टोस्ट म्यासेज कन्टेनर -->
+    <!-- टोस्ट म्यासेज -->
     <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-4">
-        <div id="toast-message" class="bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2 border border-emerald-400">
+        <div id="toast-message" class="bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2">
             <span>✅</span> <span id="toast-text">सफल भयो!</span>
         </div>
     </div>
 
-    <!-- २. स्प्ल्याश स्क्रिन -->
-    <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-teal-950 to-slate-950 text-white p-6 transition-opacity duration-500 ease-in-out">
+    <!-- स्प्ल्याश स्क्रिन (Fix: transition र pointer-events थपिएको) -->
+    <div id="splash-screen" class="fixed inset-0 z-[200] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-teal-950 to-slate-950 text-white p-6 transition-opacity duration-700 ease-in-out">
         <div class="w-full h-8"></div>
         <div class="flex flex-col items-center text-center">
             <div class="relative mb-5">
-                <div class="absolute -inset-2 rounded-3xl bg-cyan-500/30 blur-xl animate-pulse"></div>
-                <div class="relative w-28 h-28 rounded-3xl flex items-center justify-center bg-slate-900 border border-cyan-500/40 text-cyan-400 font-black text-2xl shadow-2xl">
+                <div class="relative w-24 h-24 rounded-3xl flex items-center justify-center bg-slate-900 border border-cyan-500/40 text-cyan-400 font-black text-2xl shadow-2xl">
                     NH
                 </div>
             </div>
-            <h1 class="text-2xl font-black tracking-tight text-white px-4">NepalHub</h1>
-            <p class="text-cyan-400 text-xs font-semibold tracking-wide mt-1">Complete all-in-one shop management</p>
-            <div class="mt-8 flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 0ms"></span>
-                <span class="w-2.5 h-2.5 rounded-full bg-cyan-300 animate-bounce" style="animation-delay: 150ms"></span>
-                <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-bounce" style="animation-delay: 300ms"></span>
-            </div>
+            <h1 class="text-2xl font-black text-white">NepalHub</h1>
+            <p class="text-cyan-400 text-xs font-semibold mt-1">Complete all-in-one shop management</p>
         </div>
         <div class="text-center pb-2">
-            <p class="text-[11px] text-slate-400 font-medium">Powered by <span class="text-cyan-400 font-bold">NepalHub System</span></p>
+            <p class="text-[11px] text-slate-400">Powered by <span class="text-cyan-400 font-bold">kamalgc.com.np</span></p>
         </div>
     </div>
 
-    <!-- ३. AUTH CONTAINER -->
+    <!-- AUTH CONTAINER -->
     <div id="auth-container" class="w-full max-w-md min-h-screen flex items-center justify-center p-4 bg-inherit hidden">
         <div class="bg-white border border-slate-200 dark:bg-[#0d1322] dark:border-slate-800 p-6 rounded-3xl shadow-2xl w-full">
             <div id="signup-box" class="form-box space-y-4">
                 <div class="text-center mb-4">
                     <h2 class="text-xl font-bold text-slate-800 dark:text-white">नयाँ खाता बनाउनुहोस्</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">NepalHub - Complete shop management</p>
                 </div>
                 <form id="signup-form" class="space-y-3">
-                    <input type="text" id="signup-name" placeholder="पूरा नाम (Full Name)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="email" id="signup-email" placeholder="इमेल (Email)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="password" id="signup-password" placeholder="पासवर्ड (Password)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold p-3 rounded-xl text-xs transition">रजिस्टर्ड गर्नुहोस्</button>
+                    <input type="text" id="signup-name" placeholder="पूरा नाम" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
+                    <input type="email" id="signup-email" placeholder="इमेल" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
+                    <input type="password" id="signup-password" placeholder="पासवर्ड" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
+                    <button type="submit" class="w-full bg-cyan-600 text-white font-bold p-3 rounded-xl text-xs">रजिस्टर्ड गर्नुहोस्</button>
                 </form>
-                <div class="text-center text-xs text-slate-500 dark:text-slate-400 mt-3">
-                    पहिले नै खाता छ? <a onclick="showForm('login')" class="text-cyan-600 dark:text-cyan-400 cursor-pointer font-semibold underline">लगइन गर्नुहोस्</a>
+                <div class="text-center text-xs text-slate-500 mt-3">
+                    पहिले नै खाता छ? <a onclick="showForm('login')" class="text-cyan-600 font-semibold underline cursor-pointer">लगइन गर्नुहोस्</a>
                 </div>
             </div>
 
             <div id="login-box" class="form-box hidden space-y-4">
                 <div class="text-center mb-4">
                     <h2 class="text-xl font-bold text-slate-800 dark:text-white">लगइन गर्नुहोस्</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">NepalHub</p>
                 </div>
                 <form id="login-form" class="space-y-3">
-                    <input type="email" id="login-email" placeholder="इमेल (Email)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="password" id="login-password" placeholder="पासवर्ड (Password)" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold p-3 rounded-xl text-xs transition">लगइन</button>
+                    <input type="email" id="login-email" placeholder="इमेल" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
+                    <input type="password" id="login-password" placeholder="पासवर्ड" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white">
+                    <button type="submit" class="w-full bg-cyan-600 text-white font-bold p-3 rounded-xl text-xs">लगइन</button>
                 </form>
-                <div class="text-center text-xs text-slate-500 dark:text-slate-400 mt-3 space-y-2">
-                    <div><a onclick="showForm('forgot')" class="text-amber-600 dark:text-amber-400 cursor-pointer hover:underline">पासवर्ड बिर्सनुभयो?</a></div>
-                    <div>खाता छैन? <a onclick="showForm('signup')" class="text-cyan-600 dark:text-cyan-400 cursor-pointer font-semibold underline">नयाँ बनाउनुहोस्</a></div>
-                </div>
-            </div>
-
-            <div id="forgot-box" class="form-box hidden space-y-4">
-                <div class="text-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-800 dark:text-white">पासवर्ड रिसेट</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">नयाँ पासवर्ड राख्नुहोस्</p>
-                </div>
-                <form id="forgot-form" class="space-y-3">
-                    <input type="email" id="forgot-email" placeholder="तपाईंको दर्ता भएको इमेल" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <input type="password" id="forgot-new-password" placeholder="नयाँ पासवर्ड" required class="w-full bg-slate-50 border border-slate-300 dark:bg-[#131b2e] dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
-                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold p-3 rounded-xl text-xs transition">पासवर्ड अपडेट गर्नुहोस्</button>
-                </form>
-                <div class="text-center text-xs text-slate-500 dark:text-slate-400 mt-3">
-                    पासवर्ड याद आयो? <a onclick="showForm('login')" class="text-cyan-600 dark:text-cyan-400 cursor-pointer font-semibold underline">लगइनमा फर्कनुहोस्</a>
+                <div class="text-center text-xs text-slate-500 mt-3">
+                    खाता छैन? <a onclick="showForm('signup')" class="text-cyan-600 font-semibold underline cursor-pointer">नयाँ बनाउनुहोस्</a>
                 </div>
             </div>
             <div id="auth-message" class="text-center text-xs mt-3 font-medium"></div>
         </div>
     </div>
 
-    <!-- ४. मुख्य ड्यासबोर्ड क्यानभास -->
-    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800/60 shadow-2xl flex flex-col relative pb-24 hidden transition-colors duration-300">
-        
-        <!-- ४.१ शीर्ष स्थिति पट्टी -->
-        <div class="px-3 py-2 bg-slate-100 dark:bg-[#080c14] border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-medium text-slate-600 dark:text-slate-300">
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard-container" class="w-full max-w-md min-h-screen bg-white text-slate-900 border-x border-slate-200 dark:bg-[#0d1322] dark:text-slate-100 dark:border-slate-800 shadow-2xl flex flex-col relative pb-24 hidden">
+        <header class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-inherit z-30">
             <div class="flex items-center gap-2">
-                <span id="live-time" class="text-emerald-600 dark:text-emerald-400 font-semibold">🕒 लोड हुँदै...</span>
-                <span class="text-slate-300 dark:text-slate-600">|</span>
-                <span id="live-nepali-date" class="text-slate-700 dark:text-slate-300">📅 लोड हुँदै...</span>
-            </div>
-            <div class="flex items-center gap-1.5 text-[10px]">
-                <span id="geo-location" class="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                    <i data-lucide="map-pin" class="w-3 h-3 text-cyan-600"></i> नेपाल
-                </span>
-                <span id="geo-weather" class="flex items-center gap-1 text-amber-600 dark:text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                    <i data-lucide="thermometer" class="w-3 h-3"></i> --°C
-                </span>
-            </div>
-        </div>
-
-        <!-- ४.२ मुख्य हेडर -->
-        <header class="p-3 bg-white/90 dark:bg-[#0d1322]/90 border-b border-slate-200 dark:border-slate-800/60 flex items-center justify-between sticky top-0 z-30 backdrop-blur-md">
-            <div class="flex items-center gap-2.5">
-                <button onclick="switchPage('settings')" class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-900/40 border border-cyan-300 dark:border-cyan-500/30 flex items-center justify-center font-bold text-cyan-600 dark:text-cyan-400 text-lg shadow-inner">
-                    <span id="header-logo-text">N</span>
-                </button>
+                <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center font-bold text-cyan-400">NH</div>
                 <div>
-                    <h1 id="header-shop-name" class="text-slate-900 dark:text-white font-bold text-base leading-tight">NepalHub</h1>
-                    <p id="header-owner-name" class="text-cyan-600 dark:text-cyan-400/80 text-[11px] italic font-medium">साहुजी: Kamal</p>
+                    <h1 id="header-shop-name" class="font-bold text-sm">NepalHub</h1>
+                    <p id="header-owner-name" class="text-cyan-400 text-[10px]">साहुजी: Kamal</p>
                 </div>
-            </div>
-            <div class="flex items-center gap-1.5">
-                <button onclick="toggleTheme()" id="theme-toggle-btn" class="p-1.5 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-amber-400 rounded-lg border border-slate-200 dark:border-slate-700 transition">
-                    <i data-lucide="sun" class="w-4 h-4"></i>
-                </button>
             </div>
         </header>
 
-        <!-- ४.३ मुख्य सामग्री कन्टेनर -->
         <main id="app-container" class="p-3.5 space-y-4 flex-1 overflow-y-auto">
-            <!-- Dynamic pages load here -->
+            <!-- Dynamic UI -->
         </main>
 
-        <!-- ४.४ तलको नेभिगेसन बार -->
-        <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 dark:bg-[#080c14]/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-md px-2 py-2 z-40">
-            <div class="grid grid-cols-5 items-center text-center">
-                <button onclick="switchPage('home')" id="nav-home" class="flex flex-col items-center justify-center gap-1 text-cyan-600 dark:text-cyan-400 font-bold">
-                    <i data-lucide="home" class="w-5 h-5"></i>
-                    <span class="text-[10px]">होम</span>
-                </button>
-                <button onclick="switchPage('inventory')" id="nav-inventory" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
-                    <i data-lucide="package" class="w-5 h-5"></i>
-                    <span class="text-[10px]">स्टक</span>
-                </button>
-                <div class="relative flex justify-center items-center">
-                    <button onclick="makeCall()" class="absolute -top-7 w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/40 transition transform active:scale-95 border-4 border-white dark:border-[#0d1322]">
-                        <i data-lucide="phone" class="w-6 h-6"></i>
-                    </button>
-                </div>
-                <button onclick="switchPage('udharo')" id="nav-udharo" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
-                    <i data-lucide="user" class="w-5 h-5"></i>
-                    <span class="text-[10px]">उधारो</span>
-                </button>
-                <button onclick="switchPage('pos')" id="nav-pos" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
-                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    <span class="text-[10px]">कार्ट</span>
-                </button>
+        <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white dark:bg-[#080c14] border-t border-slate-200 dark:border-slate-800 p-2 z-40">
+            <div class="grid grid-cols-4 items-center text-center">
+                <button onclick="switchPage('home')" id="nav-home" class="text-cyan-400 font-bold text-xs">होम</button>
+                <button onclick="switchPage('inventory')" id="nav-inventory" class="text-slate-400 text-xs">स्टक</button>
+                <button onclick="switchPage('udharo')" id="nav-udharo" class="text-slate-400 text-xs">उधारो</button>
+                <button onclick="switchPage('pos')" id="nav-pos" class="text-slate-400 text-xs">POS</button>
             </div>
         </div>
     </div>
 
-    <!-- ५. सूचना प्यानल -->
-    <div id="notificationPanel" class="fixed inset-0 z-50 flex justify-end bg-slate-900/50 dark:bg-slate-950/70 backdrop-blur-sm hidden">
-        <div class="bg-white border-l border-slate-200 dark:bg-[#0d1322] dark:border-slate-800 w-full max-w-sm h-full flex flex-col shadow-2xl">
-            <div class="flex items-center justify-between px-4 py-3.5 border-b border-slate-200 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="bell" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
-                    <div>
-                        <h3 class="text-slate-900 dark:text-white font-bold text-xs">सूचना तथा अलर्ट</h3>
-                    </div>
-                </div>
-                <button onclick="toggleNotifications()" class="text-slate-500 hover:text-slate-800 dark:text-slate-400 p-1">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
-            <div id="notification-list" class="flex-1 p-3 space-y-2.5 overflow-y-auto">
-                <!-- Dynamically populated alerts -->
-            </div>
-        </div>
-    </div>
-
-    <!-- ६. क्याल्कुलेटर मडल -->
-    <div id="calculator-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 hidden">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-sm p-4 pb-8 shadow-2xl relative">
-            <div class="flex items-center justify-between mb-3.5">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-                        <i data-lucide="calculator" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
-                    </div>
-                    <h3 class="text-slate-900 dark:text-white font-bold text-sm">क्याल्कुलेटर</h3>
-                </div>
-                <button onclick="toggleCalculator(false)" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-xl bg-slate-100 dark:bg-slate-950/60">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
-            <div class="bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 mb-4 text-right shadow-inner min-h-[80px] flex flex-col justify-end">
-                <div id="calc-prev" class="text-slate-400 dark:text-slate-500 text-xs font-mono tracking-wide mb-1"></div>
-                <div id="calc-display" class="text-slate-900 dark:text-white font-mono font-bold text-3xl tracking-wider">0</div>
-            </div>
-            <div class="grid grid-cols-4 gap-2">
-                <button class="h-12 rounded-2xl font-bold text-lg bg-rose-500/20 text-rose-600 border border-rose-500/30" onclick="calcClear()">AC</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" onclick="calcSign()">+/-</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-200 dark:bg-slate-800 text-cyan-600" onclick="calcOp('%')">%</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('÷')">÷</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('7')">7</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('8')">8</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('9')">9</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('×')">×</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('4')">4</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('5')">5</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('6')">6</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('-')">-</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('1')">1</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('2')">2</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('3')">3</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-500/20 text-cyan-600 border border-cyan-500/40" onclick="calcOp('+')">+</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('0')">0</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-100 dark:bg-slate-800" onclick="calcDigit('.')">.</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center" onclick="calcBack()">⌫</button>
-                <button class="h-12 rounded-2xl font-bold text-lg bg-cyan-600 text-white font-extrabold" onclick="calcEquals()">=</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JS फाइल लोड गर्ने -->
+    <!-- Component Scripts -->
     <script src="components/calculator.js"></script>
     <script src="components/finance.js"></script>
     <script src="components/inventory.js"></script>
