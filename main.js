@@ -1,16 +1,15 @@
-// १. स्प्ल्याश स्क्रिन सुरक्षित रूपमा हटाउने फङ्क्सन
-function hideSplashScreen() {
-    const splash = document.getElementById('splash-screen');
-    if (splash) {
-        splash.style.opacity = '0';
-        splash.style.pointerEvents = 'none';
-        setTimeout(() => {
-            splash.style.display = 'none';
-        }, 500);
-    }
-}
+let storeData = JSON.parse(localStorage.getItem('shopProfile')) || {
+    shopName: "NepalHub",
+    ownerName: "Kamal G.C.",
+    panNumber: "",
+    phone: "",
+    address: "",
+    footerNote: "बिक्री भएका सामानहरू फिर्ता हुँदैनन्। धन्यवाद!"
+};
 
-// २. सेफ डाटा लोड गर्ने सहयोगी फङ्क्सन
+let currentTheme = localStorage.getItem('nepalhub_theme') || 'dark';
+let currentPage = localStorage.getItem('nepalhub_last_page') || 'home';
+
 function getSafeStorage(key, fallback) {
     try {
         const item = localStorage.getItem(key);
@@ -20,82 +19,204 @@ function getSafeStorage(key, fallback) {
     }
 }
 
-// ३. ग्लोबल स्टोर डाटा
-let storeData = getSafeStorage('shopProfile', {
-    shopName: "NepalHub",
-    ownerName: "साहुजी",
-    panNumber: "",
-    phone: "",
-    address: ""
-});
+let sales = getSafeStorage('nepalhub_sales', []);
+let inventory = getSafeStorage('nepalhub_inventory', [
+    { id: '1', name: 'चामल (Basmati Rice)', costPrice: 2200, price: 2500, stock: 3, unit: 'बोरा', barcode: '1001', supplier: 'Himalayan Wholesale (9800000000)', rack: 'Rack-A1' },
+    { id: '2', name: 'खाने तेल (Sunflower Oil)', costPrice: 1650, price: 1850, stock: 25, unit: 'लिटर', barcode: '1002', supplier: 'Nepal Oil Ltd (9811111111)', rack: 'Rack-B2' }
+]);
+let customers = getSafeStorage('nepalhub_customers', []);
+let expenses = getSafeStorage('nepalhub_expenses', []);
+let personalTransactions = getSafeStorage('nepalhub_personal_finance', []);
 
-let currentPage = localStorage.getItem('nepalhub_last_page') || 'home';
-
-// ४. DOM लोड हुनासाथ स्प्ल्याश स्क्रिन हटाएर ड्यासबोर्ड देखाउने
 window.addEventListener('DOMContentLoaded', () => {
-    // १ सेकेन्डपछि स्प्ल्याश स्क्रिन आफै हट्नेछ
-    setTimeout(hideSplashScreen, 800);
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => splash.remove(), 500);
+        }
+    }, 800);
+
+    updateStoreInfoUI();
+    initLiveDateTime();
+    initGeolocationAndWeather();
+    applyTheme();
     switchPage(currentPage);
 });
 
-// ५. पेज स्विच गर्ने फङ्क्सन
+function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    const textEl = document.getElementById('toast-text');
+    textEl.innerText = msg;
+    container.classList.remove('opacity-0', '-translate-y-4');
+    setTimeout(() => {
+        container.classList.add('opacity-0', '-translate-y-4');
+    }, 2000);
+}
+
 function switchPage(page) {
     currentPage = page;
     localStorage.setItem('nepalhub_last_page', page);
-    
-    // Bottom Nav Active Highlight
-    ['home', 'inventory', 'udharo', 'pos'].forEach(p => {
+    ['home', 'pos', 'inventory', 'udharo'].forEach(p => {
         const btn = document.getElementById(`nav-${p}`);
         if (btn) {
-            if (p === page) {
-                btn.className = "text-cyan-400 font-bold text-xs flex flex-col items-center justify-center gap-1";
-            } else {
-                btn.className = "text-slate-400 text-xs flex flex-col items-center justify-center gap-1";
-            }
+            btn.className = p === page 
+                ? "flex flex-col items-center justify-center gap-1 text-cyan-600 dark:text-cyan-400 font-bold"
+                : "flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400";
         }
     });
-
     renderApp();
 }
 
-// ६. मुख्य ड्यासबोर्ड रेन्डर गर्ने फङ्क्सन
 function renderApp() {
     const container = document.getElementById('app-container');
-    if (!container) return;
-
-    if (currentPage === 'home') {
-        container.innerHTML = `
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white space-y-1 shadow-sm">
-                <h2 class="font-bold text-base">नमस्ते, ${storeData.ownerName}!</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400">NepalHub पसल व्यवस्थापन प्रणालीमा स्वागत छ।</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 mt-4">
-                <button onclick="switchPage('pos')" class="p-4 bg-slate-50 dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 rounded-2xl text-cyan-600 dark:text-cyan-400 font-bold text-xs text-left shadow-sm hover:border-cyan-500 transition-all">
-                    <span class="text-lg block mb-1">🛒</span> POS बिलिङ
-                </button>
-                <button onclick="switchPage('inventory')" class="p-4 bg-slate-50 dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 rounded-2xl text-emerald-600 dark:text-emerald-400 font-bold text-xs text-left shadow-sm hover:border-emerald-500 transition-all">
-                    <span class="text-lg block mb-1">📦</span> स्टक सामान
-                </button>
-                <button onclick="switchPage('udharo')" class="p-4 bg-slate-50 dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 rounded-2xl text-amber-600 dark:text-amber-400 font-bold text-xs text-left shadow-sm hover:border-amber-500 transition-all">
-                    <span class="text-lg block mb-1">👥</span> उधारो खाता
-                </button>
-                <button onclick="switchPage('settings')" class="p-4 bg-slate-50 dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 rounded-2xl text-purple-600 dark:text-purple-400 font-bold text-xs text-left shadow-sm hover:border-purple-500 transition-all">
-                    <span class="text-lg block mb-1">⚙️</span> पसल सेटिङ्ग
-                </button>
-            </div>
-        `;
-    } else if (currentPage === 'inventory' && typeof renderInventoryHTML === 'function') {
-        container.innerHTML = renderInventoryHTML();
-    } else if (currentPage === 'pos' && typeof renderPOSHTML === 'function') {
-        container.innerHTML = renderPOSHTML();
-    } else if (currentPage === 'udharo' && typeof renderUdharoHTML === 'function') {
-        container.innerHTML = renderUdharoHTML();
-    } else if (currentPage === 'settings' && typeof renderSettingsHTML === 'function') {
+    if (currentPage === 'home') container.innerHTML = renderHomeHTML();
+    else if (currentPage === 'pos') container.innerHTML = renderPOSHTML();
+    else if (currentPage === 'inventory') container.innerHTML = renderInventoryHTML();
+    else if (currentPage === 'udharo') container.innerHTML = renderUdharoHTML();
+    else if (currentPage === 'tax-audit') container.innerHTML = renderTaxAuditHTML();
+    else if (currentPage === 'finance') container.innerHTML = renderFinanceHTML();
+    else if (currentPage === 'calendar') container.innerHTML = renderCalendarHTML();
+    else if (currentPage === 'settings') {
         container.innerHTML = renderSettingsHTML();
+        setTimeout(loadShopProfile, 50);
     }
+    if(window.lucide) lucide.createIcons();
+}
 
-    if (window.lucide) {
-        lucide.createIcons();
+function renderHomeHTML() {
+    const totalRev = sales.reduce((sum, s) => sum + (s.total || 0), 0);
+    const totalUdharo = customers.reduce((sum, c) => sum + (c.amount || 0), 0);
+    const lowStockCount = inventory.filter(i => i.stock <= 2).length;
+
+    return `
+        <div class="space-y-3.5 animate-fadeIn">
+            <div class="p-4 rounded-3xl bg-gradient-to-r from-cyan-950 via-slate-900 to-[#0d1322] border border-cyan-500/30 shadow-lg flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">Dashboard</span>
+                    <h2 class="text-white font-black text-lg mt-1">${storeData.shopName}</h2>
+                    <p class="text-slate-400 text-xs mt-0.5">नमस्ते, ${storeData.ownerName} जी!</p>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xl">
+                    ${storeData.shopName ? storeData.shopName.charAt(0) : 'N'}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2.5">
+                <button onclick="switchPage('pos')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400"><i data-lucide="shopping-cart" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">POS बिल</span>
+                </button>
+                <button onclick="switchPage('inventory')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400"><i data-lucide="package" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">स्टक</span>
+                </button>
+                <button onclick="switchPage('udharo')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400"><i data-lucide="users" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">उधारो</span>
+                </button>
+                <button onclick="switchPage('finance')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">खर्च/बचत</span>
+                </button>
+                <button onclick="switchPage('tax-audit')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">कर/PAN</span>
+                </button>
+                <button onclick="switchPage('calendar')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400"><i data-lucide="calendar" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">पात्रो</span>
+                </button>
+                <button onclick="switchPage('settings')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#131b2e] border border-slate-800 hover:border-cyan-500/40 transition col-span-2">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400"><i data-lucide="settings" class="w-5 h-5"></i></div>
+                    <span class="text-[11px] font-bold text-slate-300 mt-1.5">सेटिङ्ग तथा प्रोफाइल</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-3.5 rounded-2xl bg-[#131b2e] border border-slate-800">
+                    <div class="text-slate-400 text-xs">आजको कुल बिक्री</div>
+                    <div class="text-white font-black text-lg mt-2">रू ${totalRev.toLocaleString()}</div>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-[#131b2e] border border-slate-800">
+                    <div class="text-slate-400 text-xs">उधारो लिन बाँकी</div>
+                    <div class="text-amber-400 font-black text-lg mt-2">रू ${totalUdharo.toLocaleString()}</div>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#131b2e] border border-slate-800 space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="toggleCalculator(true)" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-cyan-400 flex items-center justify-center gap-2">
+                        <i data-lucide="calculator" class="w-4 h-4"></i> क्याल्कुलेटर
+                    </button>
+                    <button onclick="toggleNotifications()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-amber-400 flex items-center justify-center gap-2">
+                        <i data-lucide="bell" class="w-4 h-4"></i> कम स्टक (${lowStockCount})
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center pt-2 pb-1 space-y-1">
+                <p class="text-[11px] text-slate-400">Policy & Feedback: <a href="mailto:support@kamalgc.com.np" class="text-cyan-400 underline">support@kamalgc.com.np</a></p>
+                <p class="text-[10px] text-slate-500">©️ 2026 NepalHub. All Rights Reserved.</p>
+            </div>
+        </div>
+    `;
+}
+
+function updateStoreInfoUI() {
+    const sNameEl = document.getElementById('header-shop-name');
+    const oNameEl = document.getElementById('header-owner-name');
+    if (sNameEl) sNameEl.innerText = storeData.shopName || "NepalHub";
+    if (oNameEl) oNameEl.innerText = `साहुजी: ${storeData.ownerName || 'Kamal'}`;
+}
+
+function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('nepalhub_theme', currentTheme);
+    applyTheme();
+}
+
+function applyTheme() {
+    const html = document.documentElement;
+    if (currentTheme === 'light') html.classList.remove('dark');
+    else html.classList.add('dark');
+    if(window.lucide) lucide.createIcons();
+}
+
+function makeCall() {
+    alert("सम्पर्क सेवा चालू छ...");
+}
+
+function initLiveDateTime() {
+    setInterval(() => {
+        const now = new Date();
+        let h = now.getHours(), m = now.getMinutes().toString().padStart(2, '0');
+        let ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        const timeEl = document.getElementById('live-time');
+        if (timeEl) timeEl.innerText = `🕒 ${h}:${m} ${ampm}`;
+
+        try {
+            const nepaliDate = new NepaliDate(now);
+            const monthsNepali = ["बैशाख", "जेठ", "आषाढ", "श्रावण", "भाद्र", "आश्विन", "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुन", "चैत्र"];
+            const y = nepaliDate.getYear();
+            const mName = monthsNepali[nepaliDate.getMonth()];
+            const d = nepaliDate.getDate();
+            const dateEl = document.getElementById('live-nepali-date');
+            if (dateEl) dateEl.innerText = `📅 ${y} ${mName} ${d}`;
+        } catch (e) {}
+    }, 1000);
+}
+
+function initGeolocationAndWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true`);
+                const data = await res.json();
+                const weatherEl = document.getElementById('geo-weather');
+                if(weatherEl) weatherEl.innerHTML = `<i data-lucide="thermometer" class="w-3 h-3"></i> ${data.current_weather.temperature}°C`;
+            } catch (e) {}
+        }, () => {});
     }
 }
