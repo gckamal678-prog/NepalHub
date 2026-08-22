@@ -1,0 +1,117 @@
+/* ==========================================
+   1. CSS Reset & Base Configurations
+   ================================---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ==========================================
+   2. Light & Dark Theme Dynamic Variables
+   ================================---------- */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --accent-color: #2563eb;
+  --border-color: #e5e7eb;
+}
+
+/* युजरले डार्क मोड छान्दा वा सिस्टम डार्क हुँदा स्वतः लागू हुने */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-color: #3b82f6;
+    --border-color: #334155;
+  }
+}
+
+/* यदि तपाईंले म्यानुअल रूपमा बडी वा एचटीएमएलमा .dark क्लास राख्नुहुन्छ भने */
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #3b82f6;
+  --border-color: #334155;
+}
+
+.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --accent-color: #2563eb;
+  --border-color: #e5e7eb;
+}
+
+/* ==========================================
+   3. Body & Typography
+   ================================---------- */
+body {
+  font-family: 'Mukta', 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ==========================================
+   4. Custom Utility Classes
+   ================================---------- */
+/* स्क्रोलबार लुकाउनका लागि */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* फन्ट फेमिलीहरू */
+.font-mukta {
+  font-family: 'Mukta', sans-serif;
+}
+.font-digital {
+  font-family: 'Orbitron', 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+.font-sans-nepali {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ==========================================
+   5. Animations (एनिमेसनहरू)
+   ================================---------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+/* ==========================================
+   6. Text Selection Style
+   ================================---------- */
+::selection {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}
